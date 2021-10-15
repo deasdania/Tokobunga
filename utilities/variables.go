@@ -11,7 +11,8 @@ const (
 	GET_ACCOUNT           = "/user"
 	// LOGIN           = "/login"
 	CHANGE_PASSWORD = "/change/account/password"
-	GENERATE_UUID   = "/generate/uuid"
+
+	GENERATE_UUID = "/generate/uuid"
 
 	LOGIN      = "/login"
 	CHECK_AUTH = "/check/authorize"
@@ -20,6 +21,9 @@ const (
 
 	GET_ROLE    = "/role"
 	CREATE_ROLE = "/create/role"
+
+	MEMBER = "member"
+	ADMIN  = "admin"
 )
 
 var (

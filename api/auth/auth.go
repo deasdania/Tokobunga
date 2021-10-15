@@ -47,7 +47,7 @@ func (a Auth) CreateAccount(c *gin.Context) {
 		Password:        password,
 		ConfirmPassword: confirm_password,
 	}
-	response := a.AccountUsecase.CreateUser(form_register)
+	response := a.AccountUsecase.CreateUser(form_register, utilities.MEMBER)
 	c.JSON(response.Status, response)
 }
 func (a Auth) Login(context *gin.Context) {
@@ -61,7 +61,15 @@ func (a Auth) Login(context *gin.Context) {
 		})
 		return
 	}
-	context.JSON(status, token)
+	if token != nil {
+		context.JSON(status, token)
+		return
+	} else {
+		context.JSON(status, gin.H{
+			"error": "password not match",
+		})
+		return
+	}
 }
 
 func (a Auth) Logout(context *gin.Context) {

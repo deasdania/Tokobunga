@@ -3,6 +3,7 @@ package usecase
 import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/account/repository"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/models"
+	rolerepo "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/role/repository"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/response"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/utilities"
 	"fmt"
@@ -11,11 +12,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"os"
 	"regexp"
-	// "strings"
+	"strconv"
 	"time"
 )
 
 type accountUsecase struct {
+	roleMysql      rolerepo.IRoleMysql
 	accountMysql   repository.IAccountMysql
 	responseStruct response.IResponse
 }
@@ -105,7 +107,16 @@ func (a accountUsecase) CheckUserExist(email string) bool {
 	return true
 }
 
-func (a accountUsecase) CreateUser(form_register models.FormRegister) *response.Response {
+func (a accountUsecase) CheckUserIsAdmin(email string) bool {
+	user, _ := a.accountMysql.GetAccountByEmail(email)
+	isAdmin, err := a.roleMysql.CheckUserIsAdmin(strconv.Itoa(user.Id))
+	if err != nil {
+		return false
+	}
+	return isAdmin
+}
+
+func (a accountUsecase) CreateUser(form_register models.FormRegister, member_type string) *response.Response {
 	fmt.Println(form_register)
 	exist := a.CheckUserExist(form_register.Email)
 	if exist {
@@ -128,6 +139,20 @@ func (a accountUsecase) CreateUser(form_register models.FormRegister) *response.
 		err := a.accountMysql.CreateAccount(&user)
 		if err != nil {
 			return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
+		}
+		usercreated, errs := a.accountMysql.GetAccountByEmail(form_register.Email)
+		if errs != nil {
+			fmt.Println(errs.Error())
+		}
+		if member_type == utilities.MEMBER {
+			role, errGetrole := a.roleMysql.GetRoleByName(member_type)
+			if errGetrole != nil {
+				return a.responseStruct.ResponseError(400, []string{errGetrole.Error()}, nil)
+			}
+			err = a.accountMysql.CreateUserRole(usercreated, role)
+			if err != nil {
+				return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
+			}
 		}
 		return a.responseStruct.ResponseError(200, []string{"Create User"}, map[string]string{
 			"id":    fmt.Sprintf("%d", user.Id),
@@ -172,6 +197,6 @@ func (a accountUsecase) ChangePassword(form_change_pass models.FormChangePasswor
 	}
 }
 
-func NewAccountUsecase(accountMysql repository.IAccountMysql, responseStruct response.IResponse) IAccountUsecase {
-	return &accountUsecase{accountMysql: accountMysql, responseStruct: responseStruct}
+func NewAccountUsecase(roleMysql rolerepo.IRoleMysql, accountMysql repository.IAccountMysql, responseStruct response.IResponse) IAccountUsecase {
+	return &accountUsecase{roleMysql: roleMysql, accountMysql: accountMysql, responseStruct: responseStruct}
 }

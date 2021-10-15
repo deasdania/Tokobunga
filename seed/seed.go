@@ -34,13 +34,13 @@ func Load(db *gorm.DB) {
 			},
 		}
 
-		bytes, _ := bcrypt.GenerateFromPassword([]byte(os.Getenv("ACCOUNT_SERVICE_PASSWORD")), 14)
+		bytes, _ := bcrypt.GenerateFromPassword([]byte(os.Getenv("ADMIN_ACCOUNT_PASSWORD")), 14)
 
 		var user = models.User{
 			Id:          1,
 			Uuid:        uuid.New().String(),
-			Name:        os.Getenv("ACCOUNT_SERVICE_NAME"),
-			Email:       os.Getenv("ACCOUNT_SERVICE_EMAIL"),
+			Name:        os.Getenv("ADMIN_ACCOUNT_USERNAME"),
+			Email:       os.Getenv("ADMIN_ACCOUNT_EMAIL"),
 			Password:    string(bytes),
 			CreatedDate: time.Now(),
 			UpdateDate:  time.Now(),

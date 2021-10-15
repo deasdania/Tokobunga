@@ -19,7 +19,6 @@ import (
 )
 
 func Init(r *gin.Engine) {
-
 	db := config.InitDb()
 	redisDb := config.InitDbRedis()
 
@@ -32,8 +31,8 @@ func Init(r *gin.Engine) {
 	accountMysql := repository.NewAccountMysql(db)
 	roleMysql := reporole.NewroleMysql(db)
 
-	accountUsecase := usecase.NewAccountUsecase(accountMysql, responseStruct)
 	roleUsecase := usecaserole.NewRoleUsecase(roleMysql, responseStruct)
+	accountUsecase := usecase.NewAccountUsecase(roleMysql, accountMysql, responseStruct)
 
 	//AUTH
 	authService := authjwt.JWTAuthService(redisDb)
@@ -47,10 +46,9 @@ func Init(r *gin.Engine) {
 	accountController.Account(private)
 
 	//role
-	roleController := role.Role{RoleUsecase: roleUsecase, AuthUsecase: authUsecase}
+	roleController := role.Role{RoleUsecase: roleUsecase, AuthUsecase: authUsecase, AccountUsecase: accountUsecase}
 	roleController.Role(private)
 
 	fmt.Println(utilities.ACCOUNT_PORT)
 	r.Run(fmt.Sprintf(":8089"))
-
 }
