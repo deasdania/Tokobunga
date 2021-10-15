@@ -13,12 +13,21 @@ import (
 )
 
 func Load(db *gorm.DB) {
-	err := db.Debug().AutoMigrate(&models.User{}, &models.UserRole{}, &models.Role{}).Error
+	err := db.Debug().AutoMigrate(&models.User{}, &models.UserRole{}, &models.Role{}, &models.Product{}, &models.ProductCategory{}, &models.ProductReview{}, &models.ProductGallery{}, &models.ProductDetail{}, &models.ProductSize{}).Error
 	if err != nil {
 		log.Fatalf("cannot migrate table: %v", err)
 	} else {
 		db.Model(&models.UserRole{}).AddForeignKey("user_id", "users(id)", "RESTRICT", "RESTRICT")
 		db.Model(&models.UserRole{}).AddForeignKey("role_id", "roles(id)", "RESTRICT", "RESTRICT")
+
+		db.Model(&models.Product{}).AddForeignKey("category_id", "product_categories(id)", "RESTRICT", "RESTRICT")
+		db.Model(&models.ProductReview{}).AddForeignKey("product_id", "products(id)", "RESTRICT", "RESTRICT")
+		db.Model(&models.ProductReview{}).AddForeignKey("user_id", "users(id)", "RESTRICT", "RESTRICT")
+
+		db.Model(&models.ProductDetail{}).AddForeignKey("product_id", "products(id)", "RESTRICT", "RESTRICT")
+		db.Model(&models.ProductDetail{}).AddForeignKey("size_id", "product_sizes(id)", "RESTRICT", "RESTRICT")
+
+		db.Model(&models.ProductGallery{}).AddForeignKey("product_id", "products(id)", "RESTRICT", "RESTRICT")
 		var roles = []models.Role{
 			models.Role{
 				Id:          1,
