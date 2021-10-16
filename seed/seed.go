@@ -74,5 +74,64 @@ func Load(db *gorm.DB) {
 		if err != nil {
 			fmt.Printf("[IGNORE THIS]cannot seed UserRole table: %v \n", err)
 		}
+
+		var categories = []models.ProductCategory{
+			models.ProductCategory{
+				Id:          1,
+				Name:        "Bunga Papan",
+				CreatedDate: time.Now(),
+				UpdateDate:  time.Now(),
+			},
+			models.ProductCategory{
+				Id:          2,
+				Name:        "Handbouquet",
+				CreatedDate: time.Now(),
+				UpdateDate:  time.Now(),
+			},
+			models.ProductCategory{
+				Id:          3,
+				Name:        "Standing Flower",
+				CreatedDate: time.Now(),
+				UpdateDate:  time.Now(),
+			},
+			models.ProductCategory{
+				Id:          4,
+				Name:        "Bunga Meja",
+				CreatedDate: time.Now(),
+				UpdateDate:  time.Now(),
+			},
+		}
+		for i, _ := range categories {
+			err = db.Model(&models.ProductCategory{}).Create(&categories[i]).Error
+			if err != nil {
+				fmt.Printf("[IGNORE THIS]cannot seed categories table: %v \n", err)
+			}
+		}
+		var size = []models.ProductSize{
+			models.ProductSize{
+				Id:          1,
+				Name:        "2M X 125M",
+				CreatedDate: time.Now(),
+				UpdateDate:  time.Now(),
+			},
+			models.ProductSize{
+				Id:          2,
+				Name:        "2M X 150M",
+				CreatedDate: time.Now(),
+				UpdateDate:  time.Now(),
+			},
+			models.ProductSize{
+				Id:          3,
+				Name:        "Standard",
+				CreatedDate: time.Now(),
+				UpdateDate:  time.Now(),
+			},
+		}
+		for i, _ := range size {
+			err = db.Model(&models.ProductSize{}).Create(&size[i]).Error
+			if err != nil {
+				fmt.Printf("[IGNORE THIS]cannot seed size table: %v \n", err)
+			}
+		}
 	}
 }

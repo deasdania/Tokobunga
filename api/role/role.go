@@ -65,3 +65,6 @@ func (a Role) CreateRole(c *gin.Context) {
 	})
 
 }
+
+// update
+// delete
