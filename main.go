@@ -6,7 +6,7 @@ import (
 	"github.com/joho/godotenv"
 	// "log"
 	"fmt"
-	"os"
+	// "os"
 )
 
 // @contact.name API Support
@@ -19,11 +19,12 @@ import (
 // @termsOfService http://swagger.io/terms/
 
 func main() {
-	if len(os.Args) > 1 && os.Args[1] == "local" {
-		err := godotenv.Load()
-		if err != nil {
-			fmt.Println("Error loading .env file not FOUND")
-		}
+	// if len(os.Args) > 1 {
+	// if len(os.Args) > 1 && os.Args[1] == "local" {
+	// }
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file not FOUND")
 	}
 	r := gin.Default()
 
