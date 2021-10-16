@@ -2,11 +2,9 @@ package main
 
 import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	// "log"
-	"fmt"
-	// "os"
 )
 
 // @contact.name API Support
