@@ -24,6 +24,10 @@ const (
 
 	CREATE_PRODUCT = "/create/product"
 	UPDATE_PRODUCT = "/update/product"
+
+	CREATE_PRODUCT_CATEGORY = "/create/productcategory"
+	UPDATE_PRODUCT_CATEGORY = "/update/productcategory"
+
 	MEMBER = "member"
 	ADMIN  = "admin"
 )

@@ -48,8 +48,11 @@ func (a productCategoryMysql) GetAllProductCategory(orderby string) ([]*models.P
 	return category, nil
 }
 
-func (a productCategoryMysql) CreateProduct(name *models.FormName) error {
-	return a.db.Debug().Model(&models.ProductCategory{}).Create(&name).Error
+func (a productCategoryMysql) CreateProductCategory(form *models.FormName) error {
+	prodcat := models.ProductCategory{
+		Name: form.Name,
+	}
+	return a.db.Debug().Model(&models.ProductCategory{}).Create(&prodcat).Error
 }
 
 func (a productCategoryMysql) UpdateProductName(id string, name string) error {

@@ -39,7 +39,7 @@ type ProductDetail struct {
 	ProductId   int       `json:"product_id" gorm:"not null`
 	SizeId      int       `json:"size_id" gorm:"not null`
 	Price       int       `json:"price" gorm:"not null`
-	Description string    `json:"url_image" gorm:"not null;size:255"`
+	Description string    `json:"description" gorm:"not null;size:255"`
 	CreatedDate time.Time `json:"created_date" gorm:"not null;default:CURRENT_TIMESTAMP;"`
 	UpdateDate  time.Time `json:"update_date" gorm:"not null;default:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;"`
 }

@@ -28,8 +28,10 @@ func (a productDetailMysql) GetProductDetailByProductId(product_id string) (*mod
 	}
 	return &detail, nil
 }
+func (a productDetailMysql) CreateProductDetail(detail *models.ProductDetail) error {
+	return a.db.Debug().Model(&models.ProductDetail{}).Create(&detail).Error
+}
 
-// create
 // update
 
 func (a productDetailMysql) DeleteProductDetailById(id string) error {

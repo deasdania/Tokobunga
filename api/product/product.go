@@ -19,9 +19,12 @@ type Product struct {
 }
 
 func (a Product) Product(r *gin.RouterGroup) {
-	// r.POST(utilities.LOGOUT, a.Logout)                       // private
 	r.POST(utilities.CREATE_PRODUCT, a.CreateProduct)
-	r.POST(utilities.UPDATE_PRODUCT, a.UpdateProduct)
+	r.PUT(utilities.UPDATE_PRODUCT, a.UpdateProduct)
+
+	r.POST(utilities.CREATE_PRODUCT_CATEGORY, a.CreateProductCategory)
+	r.PUT(utilities.UPDATE_PRODUCT_CATEGORY, a.UpdateProductCategory)
+
 }
 
 func (a Product) CreateProduct(c *gin.Context) {
@@ -90,5 +93,4 @@ func (a Product) UpdateProduct(c *gin.Context) {
 	c.JSON(http.StatusBadRequest, gin.H{
 		"message": "you are not allowed",
 	})
-
 }

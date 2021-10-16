@@ -20,6 +20,8 @@ import (
 type productUsecase struct {
 	productMysql         repository.IProductMysql
 	productCategoryMysql repository.IProductCategoryMysql
+	productDetailMysql   repository.IProductDetailMysql
+	productSizeMysql   	 repository.IProductSizeMysql
 	responseStruct       response.IResponse
 }
 
@@ -45,7 +47,7 @@ func (a productUsecase) CreateProduct(product models.Product) *response.Response
 	if errs != nil {
 		fmt.Println(errs.Error())
 	}
-	return a.responseStruct.ResponseError(200, []string{"Create Product"}, map[string]string{
+	return a.responseStruct.ResponseSuccess(200, []string{"Create Product"}, map[string]string{
 		"id":            fmt.Sprintf("%d", productcreated.Id),
 		"name":          productcreated.Name,
 		"category":      fmt.Sprintf("%d", category.Id),
@@ -72,7 +74,7 @@ func (a productUsecase) UpdateProduct(product models.Product) *response.Response
 			return a.responseStruct.ResponseError(400, []string{errs.Error()}, nil)
 		}
 	}
-	
+
 	category, errGetProdCat := a.productCategoryMysql.GetProductCategoryById(catId)
 	if errGetProdCat != nil {
 		return a.responseStruct.ResponseError(400, []string{errGetProdCat.Error()}, nil)
@@ -83,7 +85,7 @@ func (a productUsecase) UpdateProduct(product models.Product) *response.Response
 			return a.responseStruct.ResponseError(400, []string{errs.Error()}, nil)
 		}
 	}
-	return a.responseStruct.ResponseError(200, []string{"Updated Product"}, map[string]string{
+	return a.responseStruct.ResponseSuccess(200, []string{"Updated Product"}, map[string]string{
 		"id":            fmt.Sprintf("%d", product.Id),
 		"name":          product.Name,
 		"category":      fmt.Sprintf("%d", category.Id),
