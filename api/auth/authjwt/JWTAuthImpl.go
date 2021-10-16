@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	"log"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -24,7 +25,8 @@ func JWTAuthService(client *redis.Client) JWTService {
 
 func (a AuthJWT) CreateToken(email string) (*models.TokenDetails, error) {
 	td := &models.TokenDetails{}
-	td.AtExpires = time.Now().Add(time.Minute * 60).Unix()
+	token_lifespan, _ := strconv.Atoi(os.Getenv("TOKEN_HOUR_LIFESPAN"))
+	td.AtExpires = time.Now().Add(time.Hour * time.Duration(token_lifespan)).Unix()
 	td.AccessUuid = uuid.New().String()
 
 	td.RtExpires = time.Now().Add(time.Hour * 24 * 7).Unix()
