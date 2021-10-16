@@ -7,10 +7,10 @@ import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/auth"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/auth/authjwt"
 	usecaseauth "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/auth/usecase"
-	usecaseproduct "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/product/usecase"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/product"
-	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/role"
 	repoproduct "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/product/repository"
+	usecaseproduct "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/product/usecase"
+	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/role"
 	reporole "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/role/repository"
 	usecaserole "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/role/usecase"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/config"
@@ -36,8 +36,6 @@ func Init(r *gin.Engine) {
 	productMysql := repoproduct.NewProductMysql(db)
 	productCategoryMysql := repoproduct.NewProductCategoryMysql(db)
 
-
-
 	roleUsecase := usecaserole.NewRoleUsecase(roleMysql, responseStruct)
 	accountUsecase := usecase.NewAccountUsecase(roleMysql, accountMysql, responseStruct)
 	productUsecase := usecaseproduct.NewProductUsecase(productMysql, productCategoryMysql, responseStruct)
@@ -62,5 +60,6 @@ func Init(r *gin.Engine) {
 	productController.Product(private)
 
 	fmt.Println(utilities.ACCOUNT_PORT)
-	r.Run(fmt.Sprintf(":8089"))
+	// r.Run(fmt.Sprintf(":8089"))
+	r.Run()
 }

@@ -5,25 +5,51 @@ import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/seed"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	// "gorm.io/driver/postgres"
+	// "gorm.io/gorm"
 	"os"
 )
 
-func InitDb() *gorm.DB {
-	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		os.Getenv("ACCOUNT_DATABASE_USER"),
-		os.Getenv("ACCOUNT_DATABASE_PASSWORD"),
-		os.Getenv("ACCOUNT_DATABASE_HOST"),
-		os.Getenv("ACCOUNT_DATABASE_PORT"),
-		os.Getenv("ACCOUNT_DATABASE_NAME"),
-	)
-	db, err := gorm.Open("mysql", dataSource)
+var db *gorm.DB //database
 
-	if err != nil {
-		panic(err)
-		return nil
+func InitDb() *gorm.DB {
+
+	if os.Getenv("ENVIRONMENT") == "PRODUCTION" {
+		username := os.Getenv("DATABASE_USER")
+		password := os.Getenv("DATABASE_PASSWORD")
+		host := os.Getenv("DATABASE_HOST")
+		// port := os.Getenv("DATABASE_PORT")
+		database := os.Getenv("DATABASE_NAME")
+		// production
+
+		dbUri := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", host, username, database, password) //Build connection string
+		fmt.Println(dbUri)
+
+		conn, err := gorm.Open("postgres", dbUri)
+		if err != nil {
+			fmt.Print(err)
+		}
+
+		db = conn
+		seed.Load(db)
+		return db
+	} else {
+		dataSource := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+			os.Getenv("DATABASE_USER"),
+			os.Getenv("DATABASE_PASSWORD"),
+			os.Getenv("DATABASE_HOST"),
+			os.Getenv("DATABASE_PORT"),
+			os.Getenv("DATABASE_NAME"),
+		)
+		db, err := gorm.Open("mysql", dataSource)
+		if err != nil {
+			panic(err)
+			return nil
+		}
+
+		seed.Load(db)
+		return db
 	}
-	seed.Load(db)
-	return db
 }

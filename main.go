@@ -4,20 +4,25 @@ import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"log"
+	// "log"
+	"fmt"
 	"os"
 )
 
-// func main() {
-// 	db := config.InitDb()
-// 	defer db.Close()
-// }
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @termsOfService http://swagger.io/terms/
 
 func main() {
 	if len(os.Args) > 1 && os.Args[1] == "local" {
 		err := godotenv.Load()
 		if err != nil {
-			log.Fatal("Error loading .env file not FOUND")
+			fmt.Println("Error loading .env file not FOUND")
 		}
 	}
 	r := gin.Default()
