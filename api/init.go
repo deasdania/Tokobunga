@@ -7,7 +7,10 @@ import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/auth"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/auth/authjwt"
 	usecaseauth "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/auth/usecase"
+	usecaseproduct "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/product/usecase"
+	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/product"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/role"
+	repoproduct "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/product/repository"
 	reporole "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/role/repository"
 	usecaserole "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/role/usecase"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/config"
@@ -30,9 +33,14 @@ func Init(r *gin.Engine) {
 	responseStruct := response.InitResponse()
 	accountMysql := repository.NewAccountMysql(db)
 	roleMysql := reporole.NewroleMysql(db)
+	productMysql := repoproduct.NewProductMysql(db)
+	productCategoryMysql := repoproduct.NewProductCategoryMysql(db)
+
+
 
 	roleUsecase := usecaserole.NewRoleUsecase(roleMysql, responseStruct)
 	accountUsecase := usecase.NewAccountUsecase(roleMysql, accountMysql, responseStruct)
+	productUsecase := usecaseproduct.NewProductUsecase(productMysql, productCategoryMysql, responseStruct)
 
 	//AUTH
 	authService := authjwt.JWTAuthService(redisDb)
@@ -48,6 +56,10 @@ func Init(r *gin.Engine) {
 	//role
 	roleController := role.Role{RoleUsecase: roleUsecase, AuthUsecase: authUsecase, AccountUsecase: accountUsecase}
 	roleController.Role(private)
+
+	//product
+	productController := product.Product{ProductUsecase: productUsecase, AccountUsecase: accountUsecase, AuthUsecase: authUsecase}
+	productController.Product(private)
 
 	fmt.Println(utilities.ACCOUNT_PORT)
 	r.Run(fmt.Sprintf(":8089"))

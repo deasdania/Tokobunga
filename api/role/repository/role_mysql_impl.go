@@ -39,7 +39,7 @@ func (a roleMysql) GetRoleByUserId(id string) (*models.Role, error) {
 }
 
 func (a roleMysql) CheckUserIsAdmin(user_id string) (bool, error) {
-	var role models.Role
+	var role models.UserRole
 	err := a.db.Debug().Model(&models.UserRole{}).First(&role, "user_id = ? AND role_id = 1", user_id)
 	if err.Error != nil {
 		return false, err.Error

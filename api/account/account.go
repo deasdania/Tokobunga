@@ -36,7 +36,10 @@ func (a Account) GetUser(c *gin.Context) {
 func (a Account) CreateAccount(c *gin.Context) {
 	metadata, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
 	if errA != nil {
-		fmt.Println(errA.Error())
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": errA.Error(),
+		})
+		return
 	}
 	fmt.Println(metadata)
 	isAdmin := a.AccountUsecase.CheckUserIsAdmin(metadata.Email)

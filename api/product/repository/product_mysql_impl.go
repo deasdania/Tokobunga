@@ -50,12 +50,16 @@ func (a productMysql) GetAllProduct(orderby string) ([]*models.Product, error) {
 	return products, nil
 }
 
-func (a productMysql) CreateProduct(name *models.FormName) error {
-	return a.db.Debug().Model(&models.Product{}).Create(&name).Error
+func (a productMysql) CreateProduct(product *models.Product) error {
+	return a.db.Debug().Model(&models.Product{}).Create(&product).Error
 }
 
 func (a productMysql) UpdateProductName(id string, name string) error {
 	return a.db.Debug().Model(&models.Product{}).Where("id = ?", id).Update("name", name).Error
+}
+
+func (a productMysql) UpdateProductCategoryId(id string, category_id string) error {
+	return a.db.Debug().Model(&models.Product{}).Where("id = ?", id).Update("category_id", category_id).Error
 }
 
 func (a productMysql) DeleteProductById(id string) error {

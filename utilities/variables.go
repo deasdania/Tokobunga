@@ -22,6 +22,8 @@ const (
 	GET_ROLE    = "/role"
 	CREATE_ROLE = "/create/role"
 
+	CREATE_PRODUCT = "/create/product"
+	UPDATE_PRODUCT = "/update/product"
 	MEMBER = "member"
 	ADMIN  = "admin"
 )
