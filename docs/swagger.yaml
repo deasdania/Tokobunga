@@ -1,4 +1,21 @@
 definitions:
+  models.ProductReq:
+    properties:
+      category_id:
+        type: integer
+      description:
+        type: string
+      price:
+        type: integer
+      product_name:
+        type: string
+      size_id:
+        type: integer
+      url_images:
+        items:
+          type: string
+        type: array
+    type: object
   public.LoginInput:
     properties:
       password:
@@ -19,6 +36,229 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
 paths:
+  /api/change/account/password:
+    post:
+      description: change password by user who logged in
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: formData
+        name: confirm_password
+        type: string
+      - in: formData
+        name: email
+        type: string
+      - in: formData
+        name: new_password
+        type: string
+      - in: formData
+        name: old_password
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: ChangePassword Private
+      tags:
+      - Private
+  /api/check/authorize:
+    post:
+      description: check token header
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: CheckAuth Private
+      tags:
+      - Private
+  /api/create/account:
+    get:
+      description: free GetProductReview without any auth
+      parameters:
+      - description: set the product_id or user_id or both as Query Params
+        in: query
+        name: Body
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: GetProductReview Public
+      tags:
+      - Public
+    post:
+      description: free register without any auth
+      parameters:
+      - in: formData
+        name: confirm_password
+        type: string
+      - in: formData
+        name: email
+        type: string
+      - in: formData
+        name: name
+        type: string
+      - in: formData
+        name: password
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Register Public
+      tags:
+      - Public
+  /api/create/product:
+    post:
+      description: Logging in to get jwt token to access admin or user api by roles
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: the body to create product
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.ProductReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: CreateProduct Private
+      tags:
+      - Private
+  /api/create/productcategory:
+    post:
+      description: Category tidak bisa dibuat dengan nama yang sama
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: formData
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: CreateProductCategory Private
+      tags:
+      - Private
+  /api/create/productreview:
+    post:
+      description: Product Review hanya diizinkan setiap user 1 review, ke setiap
+        Product, rating dibatasi dari 1 hingga 5
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: formData
+        name: product_id
+        required: true
+        type: string
+      - in: formData
+        name: rating
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: CreateProductReview Private
+      tags:
+      - Private
+  /api/create/role:
+    get:
+      description: get existing role
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: formData
+        name: id
+        type: string
+      - in: formData
+        name: orderby
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: GetRole Private
+      tags:
+      - Private
+    post:
+      description: create newrole could be access just by user has admin role
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: formData
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: CreateRole Private
+      tags:
+      - Private
   /api/product:
     get:
       description: Get a list of Product
@@ -38,6 +278,86 @@ paths:
       summary: Get Product
       tags:
       - Public
+  /api/update/productcategory:
+    put:
+      description: Update dilakukan menurut id yang dilempar dan name yang berbeda
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: formData
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: UpdateProductCategory Private
+      tags:
+      - Private
+  /api/update/productreview:
+    post:
+      description: Product Review hanya di update oleh user yang berkaitan dengan
+        review
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: formData
+        name: product_id
+        required: true
+        type: string
+      - in: formData
+        name: rating
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: UpdateProductReview Private
+      tags:
+      - Private
+  /api/update/role:
+    put:
+      description: update existing role name
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: formData
+        name: role_id
+        required: true
+        type: string
+      - in: formData
+        name: role_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: UpdateRole Private
+      tags:
+      - Private
   /login:
     post:
       description: Logging in to get jwt token to access admin or user api by roles

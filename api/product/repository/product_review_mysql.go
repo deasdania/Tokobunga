@@ -9,6 +9,7 @@ type IProductReviewMysql interface {
 	GetProductReviewByUserId(user_id string) ([]*models.ProductReview, error)
 	GetProductReviewByProductId(product_id string) ([]*models.ProductReview, error)
 	GetProductReviewByProductIdAndUserId(product_id string, user_id string) (*models.ProductReview, error)
+	UpdateProductReview(id string, rating int) error
 	CreateProductReview(prodrev *models.ProductReview) error
 	DeleteProductById(id string) error
 }

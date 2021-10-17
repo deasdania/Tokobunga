@@ -67,3 +67,8 @@ type ProductReq struct {
 	Description string   `json:"description"`
 	UrlImage    []string `json:"url_images"`
 }
+
+type FormUpdateCategory struct {
+	CategoryId string `json:"category_id" binding:"required"`
+	ProductId  string `json:"product_id" binding:"required"`
+}

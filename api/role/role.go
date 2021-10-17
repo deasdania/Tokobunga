@@ -18,6 +18,15 @@ import (
 	"strings"
 )
 
+type FormGetRole struct {
+	Id      string `json:"id"`
+	Orderby string `json:"orderby"`
+}
+
+type FormUpdateRole struct {
+	RoleId   string `json:"role_id" binding:"required"`
+	RoleName string `json:"role_name" binding:"required"`
+}
 type Role struct {
 	RoleUsecase    usecase.IRoleUsecase
 	AccountUsecase accountusecase.IAccountUsecase
@@ -29,6 +38,15 @@ func (a Role) Role(r *gin.RouterGroup) {
 	r.PUT(utilities.UPDATE_ROLE, a.UpdateRole)  //Hanya untuk Admin
 }
 
+// GetRole godoc
+// @Summary GetRole Private
+// @Description get existing role
+// @Tags Private
+// @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
+// @Param Body formData FormGetRole true "set 'id' or 'orderby'"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/create/role [get]
 func (a Role) GetRole(c *gin.Context) {
 	tokenstring := token.ExtractToken(c)
 	metadata, _ := token.ExtractTokenMetadata(tokenstring)
@@ -46,6 +64,15 @@ func (a Role) GetRole(c *gin.Context) {
 	})
 }
 
+// CreateRole godoc
+// @Summary CreateRole Private
+// @Description create newrole could be access just by user has admin role
+// @Tags Private
+// @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
+// @Param Body formData models.FormName true "set 'name' to create new role"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/create/role [post]
 func (a Role) CreateRole(c *gin.Context) {
 	tokenstring := token.ExtractToken(c)
 	metadata, _ := token.ExtractTokenMetadata(tokenstring)
@@ -63,6 +90,15 @@ func (a Role) CreateRole(c *gin.Context) {
 	})
 }
 
+// UpdateRole godoc
+// @Summary UpdateRole Private
+// @Description update existing role name
+// @Tags Private
+// @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
+// @Param Body formData FormUpdateRole true "set 'role_id' and 'role_name' to update the role"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/update/role [put]
 func (a Role) UpdateRole(c *gin.Context) {
 	tokenstring := token.ExtractToken(c)
 	metadata, _ := token.ExtractTokenMetadata(tokenstring)
@@ -83,6 +119,3 @@ func (a Role) UpdateRole(c *gin.Context) {
 		"message": "you are not allowed",
 	})
 }
-
-// update
-// delete

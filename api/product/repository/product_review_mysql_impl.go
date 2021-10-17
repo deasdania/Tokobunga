@@ -50,8 +50,9 @@ func (a productReviewMysql) CreateProductReview(prodrev *models.ProductReview) e
 	return a.db.Debug().Model(&models.ProductReview{}).Create(&prodrev).Error
 }
 
-// create
-// update
+func (a productReviewMysql) UpdateProductReview(id string, rating int) error {
+	return a.db.Debug().Model(&models.ProductReview{}).Where("id = ?", id).Update("rating", rating).Error
+}
 
 func (a productReviewMysql) DeleteProductById(id string) error {
 	return a.db.Where("id = ?", id).Delete(&models.ProductReview{}).Error

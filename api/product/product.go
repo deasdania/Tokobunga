@@ -19,12 +19,21 @@ type Product struct {
 func (a Product) Product(r *gin.RouterGroup) {
 	r.POST(utilities.CREATE_PRODUCT, a.CreateProduct)
 	r.POST(utilities.CREATE_PRODUCT_CATEGORY, a.CreateProductCategory)
+	r.PUT(utilities.UPDATE_PRODUCT_CATEGORY, a.UpdateProductCategory)
 
 	r.POST(utilities.CREATE_PRODUCT_REVIEW, a.CreateProductReview)
-	// r.PUT(utilities.UPDATE_PRODUCT_REVIEW, a.UpdateProductReview)
-	// r.DEL(utilities.DELETE_PRODUCT_REVIEW, a.DeleteProductReview)
+	r.PUT(utilities.UPDATE_PRODUCT_REVIEW, a.UpdateProductReview)
 }
 
+// CreateProduct godoc
+// @Summary CreateProduct Private
+// @Description Logging in to get jwt token to access admin or user api by roles
+// @Tags Private
+// @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
+// @Param Body body models.ProductReq true "the body to create product"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/create/product [post]
 func (a Product) CreateProduct(c *gin.Context) {
 	var productReq models.ProductReq
 	err := c.ShouldBindJSON(&productReq)

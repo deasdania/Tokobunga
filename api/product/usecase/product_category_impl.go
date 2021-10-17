@@ -4,7 +4,7 @@ import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/models"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/response"
 	"fmt"
-	// "strconv"
+	"strconv"
 )
 
 func (a productUsecase) CreateProductCategory(form_name models.FormName) *response.Response {
@@ -23,22 +23,22 @@ func (a productUsecase) CreateProductCategory(form_name models.FormName) *respon
 	})
 }
 
-// func (a productUsecase) UpdateProductCategory(prodcat models.ProductCategory) *response.Response {
-// 	prodcatid := strconv.Itoa(prodcat.Id)
-// 	prodCategory, err := a.productCategoryMysql.GetProductCategoryById(prodcatid)
-// 	if err != nil {
-// 		return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
-// 	}
-// 	if prodcat.Name == prodCategory.Name {
-// 		return a.responseStruct.ResponseError(400, []string{"No changes"}, nil)
-// 	}
-// 	err = a.productCategoryMysql.UpdateProductName(prodcatid, prodcat.Name)
-// 	if err != nil {
-// 		return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
-// 	}
-// 	prodCategory, _ = a.productCategoryMysql.GetProductCategoryById(prodcatid)
-// 	return a.responseStruct.ResponseError(200, []string{"Update Product Category"}, map[string]string{
-// 		"id":   fmt.Sprintf("%d", prodCategory.Id),
-// 		"name": prodCategory.Name,
-// 	})
-// }
+func (a productUsecase) UpdateProductCategory(category_id string, name string) *response.Response {
+	catId, _ := strconv.Atoi(category_id)
+	prodcat, err := a.productCategoryMysql.GetProductCategoryById(&catId)
+	if err != nil {
+		return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
+	}
+	if prodcat.Name == name {
+		return a.responseStruct.ResponseError(400, []string{"no changes"}, nil)
+	}
+	err = a.productCategoryMysql.UpdateProductCategory(prodcat.Id, name)
+	if err != nil {
+		return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
+	}
+	prodcat, _ = a.productCategoryMysql.GetProductCategoryByName(name)
+	return a.responseStruct.ResponseError(200, []string{"Update Product Category"}, map[string]string{
+		"id":   fmt.Sprintf("%d", prodcat.Id),
+		"name": prodcat.Name,
+	})
+}

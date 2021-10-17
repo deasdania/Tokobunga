@@ -5,7 +5,7 @@ import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/response"
 	// "errors"
 	"fmt"
-	// "strconv"
+	"strconv"
 )
 
 func (a productUsecase) GetProductReview(user_id string, product_id string) *response.Response {
@@ -45,30 +45,59 @@ func (a productUsecase) GetProductReview(user_id string, product_id string) *res
 }
 
 func (a productUsecase) CreateProductReview(prodRev models.ProductReview, email string) *response.Response {
-	// user, err := a.accountMysql.GetAccountByEmail(email)
-	// if err != nil {
-	// 	fmt.Println(err.Error())
-	// 	return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
-	// }
-	// productRev, err := a.productReviewMysql.GetProductReviewByProductIdAndUserId(prodRev.ProductId, user_id)
-	// if err != nil {
-	// 	return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
-	// }
-	// return a.responseStruct.ResponseSuccess(200, []string{"Get Product Review by Product Id"}, map[string]*models.ProductReview{
-	// 	"product_reviews": productRev,
-	// })
+	user, err := a.accountMysql.GetAccountByEmail(email)
+	if err != nil {
+		fmt.Println(err.Error())
+		return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
+	}
+	product_idstr := strconv.Itoa(prodRev.ProductId)
+	user_idstr := strconv.Itoa(user.Id)
+
+	productRev, errsql := a.productReviewMysql.GetProductReviewByProductIdAndUserId(product_idstr, user_idstr)
+	if errsql == nil {
+		return a.responseStruct.ResponseError(400, []string{"Product Review by User for the Product Id has been created before, do an update instead"}, map[string]*models.ProductReview{
+			"product_reviews": productRev,
+		})
+	}
 
 	if prodRev.Rating > 5 || prodRev.Rating < 1 {
 		return a.responseStruct.ResponseError(400, []string{"Rating couldn't be more than 5 and less than 1"}, nil)
-	}
-	user, err := a.accountMysql.GetAccountByEmail(email)
-	if err != nil {
-		return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
 	}
 	prodRev.UserId = user.Id
 	errCreateProd := a.productReviewMysql.CreateProductReview(&prodRev)
 	if errCreateProd != nil {
 		return a.responseStruct.ResponseError(400, []string{errCreateProd.Error()}, nil)
+	}
+	return a.responseStruct.ResponseSuccess(200, []string{"Create Product Review"}, map[string]models.ProductReview{
+		"product_reviews": prodRev,
+	})
+}
+
+func (a productUsecase) UpdateProductReview(prodRev models.ProductReview, email string) *response.Response {
+	user, err := a.accountMysql.GetAccountByEmail(email)
+	if err != nil {
+		fmt.Println(err.Error())
+		return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
+	}
+	product_idstr := strconv.Itoa(prodRev.ProductId)
+	user_idstr := strconv.Itoa(user.Id)
+
+	productRev, errsql := a.productReviewMysql.GetProductReviewByProductIdAndUserId(product_idstr, user_idstr)
+	if errsql != nil {
+		return a.responseStruct.ResponseError(400, []string{"Product Review by User for the Product Id not in db"}, nil)
+	}
+	if prodRev.Rating == productRev.Rating {
+		return a.responseStruct.ResponseError(400, []string{"No changes"}, nil)
+	}
+	if prodRev.Rating > 5 || prodRev.Rating < 1 {
+		return a.responseStruct.ResponseError(400, []string{"Rating couldn't be more than 5 and less than 1"}, nil)
+	}
+	prodRev.UserId = user.Id
+	productRevIdstr := strconv.Itoa(productRev.Id)
+
+	errUpdateProdRev := a.productReviewMysql.UpdateProductReview(productRevIdstr, prodRev.Rating)
+	if errUpdateProdRev != nil {
+		return a.responseStruct.ResponseError(400, []string{errUpdateProdRev.Error()}, nil)
 	}
 	return a.responseStruct.ResponseSuccess(200, []string{"Create Product Review"}, map[string]models.ProductReview{
 		"product_reviews": prodRev,

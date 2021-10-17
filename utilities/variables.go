@@ -9,7 +9,7 @@ const (
 	TEST                  = "/test"
 	GET_ALL_ACCOUNT       = "/users"
 	GET_ACCOUNT           = "/user"
-	// LOGIN           = "/login"
+
 	CHANGE_PASSWORD = "/change/account/password"
 
 	GENERATE_UUID = "/generate/uuid"
@@ -28,9 +28,8 @@ const (
 	UPDATE_PRODUCT = "/update/product"
 
 	GET_PRODUCT_REVIEW    = "/product/review"
-	CREATE_PRODUCT_REVIEW = "/product/review/create"
-	UPDATE_PRODUCT_REVIEW = "/product/review/update"
-	DELETE_PRODUCT_REVIEW = "/product/review/delete"
+	CREATE_PRODUCT_REVIEW = "/create/productreview"
+	UPDATE_PRODUCT_REVIEW = "/update/productreview"
 
 	CREATE_PRODUCT_CATEGORY = "/create/productcategory"
 	UPDATE_PRODUCT_CATEGORY = "/update/productcategory"

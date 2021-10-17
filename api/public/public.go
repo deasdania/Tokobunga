@@ -51,6 +51,14 @@ func (a Public) GetProduct(c *gin.Context) {
 	return
 }
 
+// GetProductReview godoc
+// @Summary GetProductReview Public
+// @Description free GetProductReview without any auth
+// @Tags Public
+// @Param Body query string false "set the product_id or user_id or both as Query Params"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/create/account [get]
 func (a Public) GetProductReview(c *gin.Context) {
 	user_id, _ := c.GetQuery("user_id")
 	product_id, _ := c.GetQuery("product_id")
@@ -78,6 +86,14 @@ func (a Public) Login(c *gin.Context) {
 	return
 }
 
+// Register godoc
+// @Summary Register Public
+// @Description free register without any auth
+// @Tags Public
+// @Param Body formData models.FormRegister true "fill the form to register"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/create/account [post]
 func (a Public) CreateAccount(c *gin.Context) {
 	name := c.PostForm("name")
 	email := c.PostForm("email")

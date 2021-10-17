@@ -5,11 +5,11 @@ import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/models"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/utilities"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/utilities/token"
-	"fmt"
+	// "fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
-	"reflect"
+	// "reflect"
 )
 
 type Account struct {
@@ -19,7 +19,7 @@ type Account struct {
 func (a Account) Account(r *gin.RouterGroup) {
 	r.GET(utilities.CHECK_AUTH, a.CheckAuth)
 
-	r.GET(utilities.GET_ACCOUNT, a.GetUser)
+	// r.GET(utilities.GET_ACCOUNT, a.GetUser)
 	r.POST(utilities.CREATE_ACCOUNT, a.CreateAccount)
 	r.POST(utilities.CHANGE_PASSWORD, a.ChangePassword)
 
@@ -27,18 +27,12 @@ func (a Account) Account(r *gin.RouterGroup) {
 	r.POST("/test", func(c *gin.Context) { return })
 }
 
-func (a Account) GetUser(c *gin.Context) {
-	user := a.AccountUsecase.GetUser("1")
-	fmt.Println(reflect.TypeOf(user))
-	c.JSON(user.Status, user)
-}
-
+// used to be use while admin has to create user on the background
 func (a Account) CreateAccount(c *gin.Context) {
 	name := c.PostForm("name")
 	email := c.PostForm("email")
 	password := c.PostForm("password")
 	confirm_password := c.PostForm("confirm_password")
-	// role := c.PostForm("roles")
 
 	form_register := models.FormRegister{
 		Name:            name,
@@ -58,6 +52,14 @@ func (a Account) GenerateUuid(c *gin.Context) {
 	})
 }
 
+// CheckAuth godoc
+// @Summary CheckAuth Private
+// @Description check token header
+// @Tags Private
+// @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/check/authorize [post]
 func (a Account) CheckAuth(c *gin.Context) {
 	err := token.TokenValid(c)
 	if err != nil {
@@ -71,6 +73,15 @@ func (a Account) CheckAuth(c *gin.Context) {
 	})
 }
 
+// ChangePassword godoc
+// @Summary ChangePassword Private
+// @Description change password by user who logged in
+// @Tags Private
+// @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
+// @Param Body formData models.FormChangePassword true "set form to change your password"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/change/account/password [post]
 func (a Account) ChangePassword(c *gin.Context) {
 	tokenstring := token.ExtractToken(c)
 	metadata, _ := token.ExtractTokenMetadata(tokenstring)

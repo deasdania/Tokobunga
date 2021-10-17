@@ -20,6 +20,15 @@ func (a productCategoryMysql) GetProductCategoryById(id *int) (*models.ProductCa
 	return &category, nil
 }
 
+func (a productCategoryMysql) GetProductCategoryByProductId(id *int) (*models.ProductCategory, error) {
+	var category models.ProductCategory
+	err := a.db.Debug().Model(&models.ProductCategory{}).First(&category, "product_id = ?", id)
+	if err.Error != nil {
+		return nil, err.Error
+	}
+	return &category, nil
+}
+
 func (a productCategoryMysql) GetProductCategoryByName(name string) (*models.ProductCategory, error) {
 	var category models.ProductCategory
 	err := a.db.Debug().Model(&models.ProductCategory{}).First(&category, "name = ?", name)
@@ -55,7 +64,7 @@ func (a productCategoryMysql) CreateProductCategory(form *models.FormName) error
 	return a.db.Debug().Model(&models.ProductCategory{}).Create(&prodcat).Error
 }
 
-func (a productCategoryMysql) UpdateProductName(id string, name string) error {
+func (a productCategoryMysql) UpdateProductCategory(id int, name string) error {
 	return a.db.Debug().Model(&models.ProductCategory{}).Where("id = ?", id).Update("name", name).Error
 }
 

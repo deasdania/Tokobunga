@@ -11,13 +11,10 @@ type IProductUsecase interface {
 	GetProductReview(user_id string, product_id string) *response.Response
 
 	CreateProductReview(prodRev models.ProductReview, email string) *response.Response
-	// CreateProduct(product models.Product) *response.Response
-	// UpdateProduct(product models.Product) *response.Response
-	CreateProductCategory(form_name models.FormName) *response.Response
-	UpdateProduct(productReq *models.ProductReq) *response.Response
+	UpdateProductReview(prodRev models.ProductReview, email string) *response.Response
 
-	// UpdateProductCategory(prodcat models.ProductCategory) *response.Response
-	// CreateProductSize(form_name models.FormName) *response.Response
-	// UpdateProductSize(prodsize models.ProductSize) *response.Response
-	// CreateProductDetail(detail models.FormProductDetail) *response.Response
+	CreateProductCategory(form_name models.FormName) *response.Response
+	UpdateProductCategory(category_id string, name string) *response.Response
+
+	UpdateProduct(productReq *models.ProductReq) *response.Response
 }
