@@ -36,6 +36,9 @@ func Init(r *gin.Engine) {
 
 	public_api := r.Group("/api")
 	ra := r.Group("/")
+	ra.GET("/", func(c *gin.Context) {
+		c.Redirect(http.StatusFound, "/swagger/index.html")
+	})
 	// product := r.Group("/api/product")
 
 	responseStruct := response.InitResponse()
