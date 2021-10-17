@@ -3,32 +3,54 @@ package public
 import (
 	accountusecase "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/account/usecase"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/models"
+	productusecase "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/product/usecase"
 	publicusecase "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/public/usecase"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/utilities"
+
 	// "fmt"
 	"github.com/gin-gonic/gin"
 	// "net/http"
-	// "strings"
+	"strings"
 )
 
 type Public struct {
 	PublicUsecase  publicusecase.IPublicUsecase
 	AccountUsecase accountusecase.IAccountUsecase
+	ProductUsecase productusecase.IProductUsecase
 }
 
 func (a Public) Public(r *gin.RouterGroup) {
 	r.POST(utilities.LOGIN, a.Login)
 	r.POST(utilities.CREATE_ACCOUNT_PUBLIC, a.CreateAccount)
 
+	r.GET(utilities.GET_PRODUCT, a.GetProduct)
+	r.GET(utilities.GET_PRODUCT_REVIEW, a.GetProductReview)
+}
+
+func (a Public) GetProduct(c *gin.Context) {
+	product_id, _ := c.GetQuery("product_id")
+	prodid := strings.Trim(product_id, " ")
+	orderby, _ := c.GetQuery("orderby")
+	orderbytrim := strings.Trim(orderby, " ")
+
+	response := a.ProductUsecase.GetProduct(prodid, orderbytrim)
+	c.JSON(response.Status, response)
+	return
+}
+
+func (a Public) GetProductReview(c *gin.Context) {
+	user_id, _ := c.GetQuery("user_id")
+	product_id, _ := c.GetQuery("product_id")
+	response := a.ProductUsecase.GetProductReview(user_id, product_id)
+	c.JSON(response.Status, response)
+	return
 }
 
 // Login godoc
-// @Summary login a user.
-// @Description user login from public access.
+// @Summary Login
+// @Description Login User
 // @Tags Auth
-// @Param Body body loginInput true "the body to login a user"
 // @Produce json
-// @Success 200 {object} map[string]interface{}
 // @Router /login [post]
 func (a Public) Login(c *gin.Context) {
 	email := c.PostForm("email")

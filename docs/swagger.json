@@ -12,5 +12,18 @@
             "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
         }
     },
-    "paths": {}
+    "paths": {
+        "/login": {
+            "post": {
+                "description": "Login User",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login"
+            }
+        }
+    }
 }

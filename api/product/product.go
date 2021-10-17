@@ -8,7 +8,7 @@ import (
 	// "fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"strings"
+	// "strings"
 )
 
 type Product struct {
@@ -17,18 +17,12 @@ type Product struct {
 }
 
 func (a Product) Product(r *gin.RouterGroup) {
-	r.POST(utilities.GET_PRODUCT, a.GetProduct)
-
 	r.POST(utilities.CREATE_PRODUCT, a.CreateProduct)
-
 	r.POST(utilities.CREATE_PRODUCT_CATEGORY, a.CreateProductCategory)
-}
-func (a Product) GetProduct(c *gin.Context) {
-	product_id := c.PostForm("product_id")
-	prodid := strings.Trim(product_id, " ")
-	response := a.ProductUsecase.GetProduct(prodid)
-	c.JSON(response.Status, response)
-	return
+
+	r.POST(utilities.CREATE_PRODUCT_REVIEW, a.CreateProductReview)
+	// r.PUT(utilities.UPDATE_PRODUCT_REVIEW, a.UpdateProductReview)
+	// r.DEL(utilities.DELETE_PRODUCT_REVIEW, a.DeleteProductReview)
 }
 
 func (a Product) CreateProduct(c *gin.Context) {

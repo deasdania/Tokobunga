@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	accountrepo "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/account/repository"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/product/repository"
 	// "strconv"
 
@@ -24,20 +25,30 @@ type productUsecase struct {
 	productDetailMysql   repository.IProductDetailMysql
 	productSizeMysql     repository.IProductSizeMysql
 	responseStruct       response.IResponse
+	productReviewMysql   repository.IProductReviewMysql
+	accountMysql         accountrepo.IAccountMysql
 }
 
-func (a productUsecase) GetProduct(productid string) *response.Response {
+func (a productUsecase) GetProduct(productid string, order string) *response.Response {
 	fmt.Print("Get Product", productid)
 	if productid == "" {
-		allProduct, err := a.productMysql.GetAllProduct(productid)
+		allProduct, err := a.productMysql.GetAllProduct(order)
 		if err != nil {
 			return a.responseStruct.ResponseError(400, []string{"cant get all products"}, nil)
 		}
 		fmt.Println(allProduct)
 		fmt.Println(&allProduct)
-		return a.responseStruct.ResponseError(200, []string{"coba cek"}, nil)
+		return a.responseStruct.ResponseSuccess(200, []string{"All Product"}, map[string][]*models.Product{
+			"product": allProduct,
+		})
 	}
-	return a.responseStruct.ResponseError(200, []string{"coba cek diluar if"}, nil)
+	aProduct, err := a.productMysql.GetProductById(productid)
+	if err != nil {
+		return a.responseStruct.ResponseError(400, []string{"cant get all products"}, nil)
+	}
+	return a.responseStruct.ResponseSuccess(200, []string{"Get by Product"}, map[string]models.Product{
+		"product": *aProduct,
+	})
 }
 func (a productUsecase) CheckReq(productReq *models.ProductReq) *response.Response {
 	fmt.Println("productReq", productReq)
@@ -94,6 +105,6 @@ func (a productUsecase) UpdateProduct(productReq *models.ProductReq) *response.R
 	return a.responseStruct.ResponseError(400, []string{"has been created before, you could do an update"}, nil)
 }
 
-func NewProductUsecase(productMysql repository.IProductMysql, productCategoryMysql repository.IProductCategoryMysql, productDetailMysql repository.IProductDetailMysql, productSizeMysql repository.IProductSizeMysql, responseStruct response.IResponse) IProductUsecase {
-	return &productUsecase{productMysql: productMysql, productCategoryMysql: productCategoryMysql, productDetailMysql: productDetailMysql, productSizeMysql: productSizeMysql, responseStruct: responseStruct}
+func NewProductUsecase(productMysql repository.IProductMysql, productCategoryMysql repository.IProductCategoryMysql, productDetailMysql repository.IProductDetailMysql, productSizeMysql repository.IProductSizeMysql, responseStruct response.IResponse, productReviewMysql repository.IProductReviewMysql, accountMysql accountrepo.IAccountMysql) IProductUsecase {
+	return &productUsecase{productMysql: productMysql, productCategoryMysql: productCategoryMysql, productDetailMysql: productDetailMysql, productSizeMysql: productSizeMysql, responseStruct: responseStruct, productReviewMysql: productReviewMysql, accountMysql: accountMysql}
 }

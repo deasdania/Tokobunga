@@ -41,10 +41,11 @@ func Init(r *gin.Engine) {
 	productCategoryMysql := repoproduct.NewProductCategoryMysql(db)
 	productDetailMysql := repoproduct.NewProductDetailMysql(db)
 	productSizeMysql := repoproduct.NewProductSizeMysql(db)
+	productReviewMysql := repoproduct.NewProductReviewMysql(db)
 
 	accountUsecase := usecase.NewAccountUsecase(roleMysql, accountMysql, responseStruct)
 	roleUsecase := usecaserole.NewRoleUsecase(roleMysql, responseStruct)
-	productUsecase := usecaseproduct.NewProductUsecase(productMysql, productCategoryMysql, productDetailMysql, productSizeMysql, responseStruct)
+	productUsecase := usecaseproduct.NewProductUsecase(productMysql, productCategoryMysql, productDetailMysql, productSizeMysql, responseStruct, productReviewMysql, accountMysql)
 	publicUsecase := usecasepublic.NewPublicUsecase(accountMysql, responseStruct, productMysql)
 
 	//account
@@ -60,7 +61,7 @@ func Init(r *gin.Engine) {
 	productController.Product(private)
 
 	//public
-	publicController := public.Public{PublicUsecase: publicUsecase, AccountUsecase: accountUsecase}
+	publicController := public.Public{PublicUsecase: publicUsecase, AccountUsecase: accountUsecase, ProductUsecase: productUsecase}
 	publicController.Public(public_api)
 
 	fmt.Println(utilities.ACCOUNT_PORT)

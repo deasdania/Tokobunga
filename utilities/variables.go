@@ -27,6 +27,11 @@ const (
 	CREATE_PRODUCT = "/create/product"
 	UPDATE_PRODUCT = "/update/product"
 
+	GET_PRODUCT_REVIEW    = "/product/review"
+	CREATE_PRODUCT_REVIEW = "/product/review/create"
+	UPDATE_PRODUCT_REVIEW = "/product/review/update"
+	DELETE_PRODUCT_REVIEW = "/product/review/delete"
+
 	CREATE_PRODUCT_CATEGORY = "/create/productcategory"
 	UPDATE_PRODUCT_CATEGORY = "/update/productcategory"
 

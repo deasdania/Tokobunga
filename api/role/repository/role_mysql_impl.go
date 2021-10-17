@@ -66,8 +66,8 @@ func (a roleMysql) GetAllRole(orderby string) ([]*models.Role, error) {
 	return roles, nil
 }
 
-func (a roleMysql) CreateRole(name *models.FormName) error {
-	return a.db.Debug().Model(&models.Role{}).Create(&name).Error
+func (a roleMysql) CreateRole(role *models.Role) error {
+	return a.db.Debug().Model(&models.Role{}).Create(&role).Error
 }
 
 func (a roleMysql) UpdateRoleName(id string, name string) error {

@@ -53,6 +53,10 @@ func TokenValid(c *gin.Context) error {
 
 func ExtractToken(c *gin.Context) string {
 	token := c.Query("token")
+
+	fmt.Println("token")
+	fmt.Println(token)
+
 	if token != "" {
 		return token
 	}

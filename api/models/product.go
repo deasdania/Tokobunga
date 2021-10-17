@@ -22,6 +22,7 @@ type ProductReview struct {
 	Id          int       `json:"id" gorm:"primary_key;AUTO_INCREMENT;not null`
 	ProductId   int       `json:"product_id" gorm:"not null`
 	UserId      int       `json:"user_id" gorm:"not null`
+	Rating      int       `json:"rating" gorm:"not null`
 	CreatedDate time.Time `json:"created_date" gorm:"not null;default:CURRENT_TIMESTAMP;"`
 	UpdateDate  time.Time `json:"update_date" gorm:"not null;default:CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;"`
 }
