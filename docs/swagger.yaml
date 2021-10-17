@@ -1,3 +1,14 @@
+definitions:
+  public.LoginInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
 info:
   contact:
     email: support@swagger.io
@@ -8,12 +19,44 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
 paths:
-  /login:
-    post:
-      description: Login User
+  /api/product:
+    get:
+      description: Get a list of Product
+      parameters:
+      - description: set the product_id or orderby as Query Params
+        in: query
+        name: search
+        type: string
       produces:
       - application/json
-      summary: Login
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get Product
       tags:
-      - Auth
+      - Public
+  /login:
+    post:
+      description: Logging in to get jwt token to access admin or user api by roles
+      parameters:
+      - description: the body to login user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/public.LoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Login user
+      tags:
+      - Public
 swagger: "2.0"

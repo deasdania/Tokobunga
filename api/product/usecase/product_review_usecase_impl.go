@@ -45,6 +45,19 @@ func (a productUsecase) GetProductReview(user_id string, product_id string) *res
 }
 
 func (a productUsecase) CreateProductReview(prodRev models.ProductReview, email string) *response.Response {
+	// user, err := a.accountMysql.GetAccountByEmail(email)
+	// if err != nil {
+	// 	fmt.Println(err.Error())
+	// 	return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
+	// }
+	// productRev, err := a.productReviewMysql.GetProductReviewByProductIdAndUserId(prodRev.ProductId, user_id)
+	// if err != nil {
+	// 	return a.responseStruct.ResponseError(400, []string{err.Error()}, nil)
+	// }
+	// return a.responseStruct.ResponseSuccess(200, []string{"Get Product Review by Product Id"}, map[string]*models.ProductReview{
+	// 	"product_reviews": productRev,
+	// })
+
 	if prodRev.Rating > 5 || prodRev.Rating < 1 {
 		return a.responseStruct.ResponseError(400, []string{"Rating couldn't be more than 5 and less than 1"}, nil)
 	}

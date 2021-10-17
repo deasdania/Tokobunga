@@ -21,6 +21,9 @@ import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/utilities"
 	"fmt"
 	"github.com/gin-gonic/gin"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	// "os"
 )
 
@@ -32,6 +35,7 @@ func Init(r *gin.Engine) {
 	private.Use(middlewares.JwtAuthMiddleware())
 
 	public_api := r.Group("/api")
+	ra := r.Group("/")
 	// product := r.Group("/api/product")
 
 	responseStruct := response.InitResponse()
@@ -63,6 +67,7 @@ func Init(r *gin.Engine) {
 	//public
 	publicController := public.Public{PublicUsecase: publicUsecase, AccountUsecase: accountUsecase, ProductUsecase: productUsecase}
 	publicController.Public(public_api)
+	ra.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	fmt.Println(utilities.ACCOUNT_PORT)
 	// r.Run(fmt.Sprintf(":8089"))

@@ -32,16 +32,82 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/login": {
-            "post": {
-                "description": "Login User",
+        "/api/product": {
+            "get": {
+                "description": "Get a list of Product",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Auth"
+                    "Public"
                 ],
-                "summary": "Login"
+                "summary": "Get Product",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "set the product_id or orderby as Query Params",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "description": "Logging in to get jwt token to access admin or user api by roles",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Public"
+                ],
+                "summary": "Login user",
+                "parameters": [
+                    {
+                        "description": "the body to login user",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/public.LoginInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "public.LoginInput": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
             }
         }
     }

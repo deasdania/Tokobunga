@@ -13,6 +13,11 @@ import (
 	"strings"
 )
 
+type LoginInput struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
 type Public struct {
 	PublicUsecase  publicusecase.IPublicUsecase
 	AccountUsecase accountusecase.IAccountUsecase
@@ -27,6 +32,14 @@ func (a Public) Public(r *gin.RouterGroup) {
 	r.GET(utilities.GET_PRODUCT_REVIEW, a.GetProductReview)
 }
 
+// GetProduct godoc
+// @Summary Get Product
+// @Description Get a list of Product
+// @Tags Public
+// @Param search query string false "set the product_id or orderby as Query Params"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /api/product [get]
 func (a Public) GetProduct(c *gin.Context) {
 	product_id, _ := c.GetQuery("product_id")
 	prodid := strings.Trim(product_id, " ")
@@ -47,10 +60,12 @@ func (a Public) GetProductReview(c *gin.Context) {
 }
 
 // Login godoc
-// @Summary Login
-// @Description Login User
-// @Tags Auth
+// @Summary Login user
+// @Description Logging in to get jwt token to access admin or user api by roles
+// @Tags Public
+// @Param Body body LoginInput true "the body to login user"
 // @Produce json
+// @Success 200 {object} map[string]interface{}
 // @Router /login [post]
 func (a Public) Login(c *gin.Context) {
 	email := c.PostForm("email")
