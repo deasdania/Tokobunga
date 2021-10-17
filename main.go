@@ -2,10 +2,11 @@ package main
 
 import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api"
-	// "Final-Project-BDS-Sanbercode-Golang-Batch-28/docs"
+	"Final-Project-BDS-Sanbercode-Golang-Batch-28/docs"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"os"
 )
 
 // @contact.name API Support
@@ -26,11 +27,11 @@ func main() {
 	r := gin.Default()
 
 	// programmatically set swagger info
-	// docs.SwaggerInfo.Title = "Swagger Toko Bunga API"
-	// docs.SwaggerInfo.Description = "This is a Final Project of Camp"
-	// docs.SwaggerInfo.Version = "1.0"
-	// docs.SwaggerInfo.Host = "localhost:8080"
-	// docs.SwaggerInfo.Schemes = []string{"http", "https"}
+	docs.SwaggerInfo.Title = "Swagger Toko Bunga API"
+	docs.SwaggerInfo.Description = "This is a Final Project of Camp"
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = os.Getenv("HOST")
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	api.Init(r)
 }

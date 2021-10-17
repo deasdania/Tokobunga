@@ -2,10 +2,9 @@ package account
 
 import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/account/usecase"
-	authusecase "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/auth/usecase"
-
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/models"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/utilities"
+	"Final-Project-BDS-Sanbercode-Golang-Batch-28/utilities/token"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -15,10 +14,11 @@ import (
 
 type Account struct {
 	AccountUsecase usecase.IAccountUsecase
-	AuthUsecase    authusecase.IAuthUsecase
 }
 
 func (a Account) Account(r *gin.RouterGroup) {
+	r.GET(utilities.CHECK_AUTH, a.CheckAuth)
+
 	r.GET(utilities.GET_ACCOUNT, a.GetUser)
 	r.POST(utilities.CREATE_ACCOUNT, a.CreateAccount)
 	r.POST(utilities.CHANGE_PASSWORD, a.ChangePassword)
@@ -34,35 +34,21 @@ func (a Account) GetUser(c *gin.Context) {
 }
 
 func (a Account) CreateAccount(c *gin.Context) {
-	metadata, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
-	if errA != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": errA.Error(),
-		})
-		return
-	}
-	fmt.Println(metadata)
-	isAdmin := a.AccountUsecase.CheckUserIsAdmin(metadata.Email)
-	if isAdmin {
-		name := c.PostForm("name")
-		email := c.PostForm("email")
-		password := c.PostForm("password")
-		confirm_password := c.PostForm("confirm_password")
-		// role := c.PostForm("roles")
+	name := c.PostForm("name")
+	email := c.PostForm("email")
+	password := c.PostForm("password")
+	confirm_password := c.PostForm("confirm_password")
+	// role := c.PostForm("roles")
 
-		form_register := models.FormRegister{
-			Name:            name,
-			Email:           email,
-			Password:        password,
-			ConfirmPassword: confirm_password,
-		}
-		response := a.AccountUsecase.CreateUser(form_register, utilities.ADMIN)
-		c.JSON(response.Status, response)
-		return
+	form_register := models.FormRegister{
+		Name:            name,
+		Email:           email,
+		Password:        password,
+		ConfirmPassword: confirm_password,
 	}
-	c.JSON(http.StatusBadRequest, gin.H{
-		"message": "you are not allowed",
-	})
+	response := a.AccountUsecase.CreateUser(form_register, utilities.ADMIN)
+	c.JSON(response.Status, response)
+	return
 }
 
 func (a Account) GenerateUuid(c *gin.Context) {
@@ -72,11 +58,22 @@ func (a Account) GenerateUuid(c *gin.Context) {
 	})
 }
 
-func (a Account) ChangePassword(c *gin.Context) {
-	metadata, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
-	if errA != nil {
-		fmt.Println(errA.Error())
+func (a Account) CheckAuth(c *gin.Context) {
+	err := token.TokenValid(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "Not Valid Token",
+		})
+		return
 	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Valid Token",
+	})
+}
+
+func (a Account) ChangePassword(c *gin.Context) {
+	tokenstring := token.ExtractToken(c)
+	metadata, _ := token.ExtractTokenMetadata(tokenstring)
 	email := metadata.Email
 	old_password := c.PostForm("old_password")
 	new_password := c.PostForm("new_password")

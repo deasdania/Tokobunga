@@ -2,23 +2,21 @@ package role
 
 import (
 	accountusecase "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/account/usecase"
-	authusecase "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/auth/usecase"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/models"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/role/usecase"
 
 	// "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/models"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/utilities"
-	"fmt"
+	// "fmt"
 	"github.com/gin-gonic/gin"
 	// "github.com/satori/go.uuid"
 	// "github.com/google/uuid"
-	"net/http"
+	// "net/http"
 	// "reflect"
 )
 
 type Role struct {
 	RoleUsecase    usecase.IRoleUsecase
-	AuthUsecase    authusecase.IAuthUsecase
 	AccountUsecase accountusecase.IAccountUsecase
 }
 
@@ -28,42 +26,30 @@ func (a Role) Role(r *gin.RouterGroup) {
 }
 
 func (a Role) GetRole(c *gin.Context) {
-	metadata, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
-	if errA != nil {
-		fmt.Println(errA.Error())
-	}
-	fmt.Println(metadata)
-	isAdmin := a.AccountUsecase.CheckUserIsAdmin(metadata.Email)
-	if isAdmin {
-		id, _ := c.GetQuery("id")
-		orderby, _ := c.GetQuery("orderby")
-		response := a.RoleUsecase.GetRoles(id, orderby)
-		c.JSON(response.Status, response)
-		return
-	}
-	c.JSON(http.StatusBadRequest, gin.H{
-		"message": "you are not allowed",
-	})
+	id, _ := c.GetQuery("id")
+	orderby, _ := c.GetQuery("orderby")
+	response := a.RoleUsecase.GetRoles(id, orderby)
+	c.JSON(response.Status, response)
+	return
+	// metadata, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
+	// if errA != nil {
+	// 	fmt.Println(errA.Error())
+	// }
+	// fmt.Println(metadata)
+	// isAdmin := a.AccountUsecase.CheckUserIsAdmin(metadata.Email)
+	// if isAdmin {
+	// }
+	// c.JSON(http.StatusBadRequest, gin.H{
+	// 	"message": "you are not allowed",
+	// })
 }
 
 func (a Role) CreateRole(c *gin.Context) {
-	metadata, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
-	if errA != nil {
-		fmt.Println(errA.Error())
-	}
-	fmt.Println(metadata)
-	isAdmin := a.AccountUsecase.CheckUserIsAdmin(metadata.Email)
-	if isAdmin {
-		name := c.PostForm("role_name")
-		form_name := models.FormName{Name: name}
-		response := a.RoleUsecase.CreateRole(form_name)
-		c.JSON(response.Status, response)
-		return
-	}
-	c.JSON(http.StatusBadRequest, gin.H{
-		"message": "you are not allowed",
-	})
-
+	name := c.PostForm("role_name")
+	form_name := models.FormName{Name: name}
+	response := a.RoleUsecase.CreateRole(form_name)
+	c.JSON(response.Status, response)
+	return
 }
 
 // update

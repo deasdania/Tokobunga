@@ -26,7 +26,20 @@ type productUsecase struct {
 	responseStruct       response.IResponse
 }
 
-func (a productUsecase) CreateProduct(productReq *models.ProductReq) *response.Response {
+func (a productUsecase) GetProduct(productid string) *response.Response {
+	fmt.Print("Get Product", productid)
+	if productid == "" {
+		allProduct, err := a.productMysql.GetAllProduct(productid)
+		if err != nil {
+			return a.responseStruct.ResponseError(400, []string{"cant get all products"}, nil)
+		}
+		fmt.Println(allProduct)
+		fmt.Println(&allProduct)
+		return a.responseStruct.ResponseError(200, []string{"coba cek"}, nil)
+	}
+	return a.responseStruct.ResponseError(200, []string{"coba cek diluar if"}, nil)
+}
+func (a productUsecase) CheckReq(productReq *models.ProductReq) *response.Response {
 	fmt.Println("productReq", productReq)
 	for _, u := range productReq.UrlImage {
 		_, err := url.ParseRequestURI(u)
@@ -49,6 +62,14 @@ func (a productUsecase) CreateProduct(productReq *models.ProductReq) *response.R
 	if errGetProdSize != nil {
 		return a.responseStruct.ResponseError(400, []string{"Product Size Error: " + errGetProdSize.Error()}, nil)
 	}
+	return a.responseStruct.ResponseError(200, []string{"pass the checking req"}, nil)
+}
+
+func (a productUsecase) CreateProduct(productReq *models.ProductReq) *response.Response {
+	resChecking := a.CheckReq(productReq)
+	if resChecking.Status != 200 {
+		return resChecking
+	}
 	// create the produk
 	errCreateProd := a.productMysql.CreateProductReq(productReq)
 	if errCreateProd != nil {
@@ -65,43 +86,13 @@ func (a productUsecase) CreateProduct(productReq *models.ProductReq) *response.R
 	})
 }
 
-// func (a productUsecase) UpdateProduct(product models.Product) *response.Response {
-// 	// cek apakah produk dengan yang sama ada di db
-// 	intId := strconv.Itoa(product.Id)
-// 	productg, errs := a.productMysql.GetProductById(intId)
-// 	if errs != nil {
-// 		return a.responseStruct.ResponseError(400, []string{errs.Error()}, nil)
-// 	}
-// 	if product.Name == productg.Name {
-// 		if product.CategoryId == productg.CategoryId {
-// 			return a.responseStruct.ResponseError(400, []string{"No changes"}, nil)
-// 		}
-// 	}
-// 	catId := strconv.Itoa(product.CategoryId)
-// 	if product.Name != productg.Name {
-// 		errs = a.productMysql.UpdateProductName(intId, product.Name)
-// 		if errs != nil {
-// 			return a.responseStruct.ResponseError(400, []string{errs.Error()}, nil)
-// 		}
-// 	}
-
-// 	category, errGetProdCat := a.productCategoryMysql.GetProductCategoryById(catId)
-// 	if errGetProdCat != nil {
-// 		return a.responseStruct.ResponseError(400, []string{errGetProdCat.Error()}, nil)
-// 	}
-// 	if product.CategoryId != productg.CategoryId {
-// 		errs = a.productMysql.UpdateProductCategoryId(intId, catId)
-// 		if errs != nil {
-// 			return a.responseStruct.ResponseError(400, []string{errs.Error()}, nil)
-// 		}
-// 	}
-// 	return a.responseStruct.ResponseSuccess(200, []string{"Updated Product"}, map[string]string{
-// 		"id":            fmt.Sprintf("%d", product.Id),
-// 		"name":          product.Name,
-// 		"category":      fmt.Sprintf("%d", category.Id),
-// 		"category_name": category.Name,
-// 	})
-// }
+func (a productUsecase) UpdateProduct(productReq *models.ProductReq) *response.Response {
+	resChecking := a.CheckReq(productReq)
+	if resChecking.Status != 200 {
+		return resChecking
+	}
+	return a.responseStruct.ResponseError(400, []string{"has been created before, you could do an update"}, nil)
+}
 
 func NewProductUsecase(productMysql repository.IProductMysql, productCategoryMysql repository.IProductCategoryMysql, productDetailMysql repository.IProductDetailMysql, productSizeMysql repository.IProductSizeMysql, responseStruct response.IResponse) IProductUsecase {
 	return &productUsecase{productMysql: productMysql, productCategoryMysql: productCategoryMysql, productDetailMysql: productDetailMysql, productSizeMysql: productSizeMysql, responseStruct: responseStruct}

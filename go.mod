@@ -21,7 +21,7 @@ require (
 	github.com/onsi/gomega v1.16.0 // indirect
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
 	github.com/swaggo/gin-swagger v1.3.2
-	github.com/swaggo/swag v1.7.3 // indirect
+	github.com/swaggo/swag v1.7.3
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f // indirect
 	golang.org/x/sys v0.0.0-20211015200801-69063c4bb744 // indirect

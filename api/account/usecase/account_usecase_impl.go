@@ -7,13 +7,10 @@ import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/response"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/utilities"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
-	"os"
 	"regexp"
 	"strconv"
-	"time"
 )
 
 type accountUsecase struct {
@@ -40,29 +37,6 @@ func (a accountUsecase) HashPassword(password string) (string, error) {
 func (a accountUsecase) CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
-}
-
-func (a accountUsecase) GenerateJWT(user *models.User) (string, error) {
-	var secretJWT = []byte(os.Getenv(utilities.KEY_JWT))
-	token := jwt.New(jwt.SigningMethodHS256)
-	claims := token.Claims.(jwt.MapClaims)
-
-	claims["authorized"] = true
-	claims["user"] = map[string]string{
-		"id":    fmt.Sprintf("%d", user.Id),
-		"uuid":  user.Uuid,
-		"name":  user.Name,
-		"email": user.Email,
-	}
-	claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
-	tokenString, err := token.SignedString(secretJWT)
-
-	if err != nil {
-		fmt.Errorf("Something went wrong: %s", err.Error())
-		return "", err
-	}
-	return tokenString, nil
-
 }
 
 //The password strength must be letter size + number + sign, 9 digits or more
