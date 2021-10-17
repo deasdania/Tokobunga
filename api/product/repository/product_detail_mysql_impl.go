@@ -2,7 +2,7 @@ package repository
 
 import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/models"
-	// "fmt"
+	"fmt"
 	"github.com/jinzhu/gorm"
 	// "strings"
 )
@@ -22,6 +22,7 @@ func (a productDetailMysql) GetProductDetailById(id string) (*models.ProductDeta
 
 func (a productDetailMysql) GetProductDetailByProductId(product_id string) (*models.ProductDetail, error) {
 	var detail models.ProductDetail
+	fmt.Println("ayamZ")
 	err := a.db.Debug().Model(&models.ProductDetail{}).First(&detail, "product_id = ?", product_id)
 	if err.Error != nil {
 		return nil, err.Error

@@ -22,11 +22,15 @@ const (
 	GET_ROLE    = "/role"
 	CREATE_ROLE = "/create/role"
 
+	GET_PRODUCT    = "/product"
 	CREATE_PRODUCT = "/create/product"
 	UPDATE_PRODUCT = "/update/product"
 
 	CREATE_PRODUCT_CATEGORY = "/create/productcategory"
 	UPDATE_PRODUCT_CATEGORY = "/update/productcategory"
+
+	CREATE_PRODUCT_DETAIL = "/create/productdetail"
+	UPDATE_PRODUCT_DETAIL = "/update/productdetail"
 
 	MEMBER = "member"
 	ADMIN  = "admin"

@@ -11,7 +11,7 @@ type productMysql struct {
 	db *gorm.DB
 }
 
-func (a productMysql) GetProductByName(name string) (*models.Product, error) {
+func (a productMysql) GetProductByName(name *string) (*models.Product, error) {
 	var product models.Product
 	err := a.db.Debug().Model(&models.Product{}).First(&product, "name = ?", name)
 	if err.Error != nil {
@@ -50,8 +50,58 @@ func (a productMysql) GetAllProduct(orderby string) ([]*models.Product, error) {
 	return products, nil
 }
 
+func (a productMysql) CreateProductReq(productReq *models.ProductReq) error {
+	fmt.Println(productReq)
+	fmt.Println(productReq.Name)
+	fmt.Println(&productReq.Name)
+	// create product
+	product := models.Product{
+		CategoryId: productReq.CategoryId,
+		Name:       productReq.Name,
+	}
+	err := a.CreateProduct(&product)
+	if err != nil {
+		return err
+	}
+
+	// get product
+	theproduct, _ := a.GetProductByName(&productReq.Name)
+
+	// create product detail
+	productDetail := models.ProductDetail{
+		ProductId:   theproduct.Id,
+		SizeId:      productReq.SizeId,
+		Price:       productReq.Price,
+		Description: productReq.Description,
+	}
+	err = a.CreateProductDetail(&productDetail)
+	if err != nil {
+		return err
+	}
+	for _, u := range productReq.UrlImage {
+		prodGal := models.ProductGallery{
+			ProductId: theproduct.Id,
+			UrlImage:  u,
+		}
+		err = a.CreateProductGallery(&prodGal)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+	// return a.db.Debug().Model(&models.Product{}).Create(&product).Error
+}
+
 func (a productMysql) CreateProduct(product *models.Product) error {
 	return a.db.Debug().Model(&models.Product{}).Create(&product).Error
+}
+
+func (a productMysql) CreateProductDetail(detail *models.ProductDetail) error {
+	return a.db.Debug().Model(&models.ProductDetail{}).Create(&detail).Error
+}
+
+func (a productMysql) CreateProductGallery(gallery *models.ProductGallery) error {
+	return a.db.Debug().Model(&models.ProductGallery{}).Create(&gallery).Error
 }
 
 func (a productMysql) UpdateProductName(id string, name string) error {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api"
+	// "Final-Project-BDS-Sanbercode-Golang-Batch-28/docs"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -17,14 +18,19 @@ import (
 // @termsOfService http://swagger.io/terms/
 
 func main() {
-	// if len(os.Args) > 1 {
-	// if len(os.Args) > 1 && os.Args[1] == "local" {
-	// }
+	// for load godotenv
 	err := godotenv.Load()
 	if err != nil {
 		fmt.Println("Error loading .env file not FOUND")
 	}
 	r := gin.Default()
+
+	// programmatically set swagger info
+	// docs.SwaggerInfo.Title = "Swagger Toko Bunga API"
+	// docs.SwaggerInfo.Description = "This is a Final Project of Camp"
+	// docs.SwaggerInfo.Version = "1.0"
+	// docs.SwaggerInfo.Host = "localhost:8080"
+	// docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	api.Init(r)
 }

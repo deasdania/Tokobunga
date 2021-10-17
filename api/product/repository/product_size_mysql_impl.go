@@ -2,13 +2,18 @@ package repository
 
 import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/models"
-	// "fmt"
+	"fmt"
 	"github.com/jinzhu/gorm"
 	"strings"
 )
 
 type productSizeMysql struct {
 	db *gorm.DB
+}
+
+func (a productSizeMysql) Cobaajadulu() error {
+	fmt.Printf("enak")
+	return nil
 }
 
 func (a productSizeMysql) GetProductSizeByName(name string) (*models.ProductSize, error) {
@@ -20,7 +25,7 @@ func (a productSizeMysql) GetProductSizeByName(name string) (*models.ProductSize
 	return &size, nil
 }
 
-func (a productSizeMysql) GetProductSizeById(id string) (*models.ProductSize, error) {
+func (a productSizeMysql) GetProductSizeById(id int) (*models.ProductSize, error) {
 	var size models.ProductSize
 	err := a.db.Debug().Model(&models.ProductSize{}).First(&size, "id = ?", id)
 	if err.Error != nil {

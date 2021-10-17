@@ -3,7 +3,7 @@ package repository
 import "Final-Project-BDS-Sanbercode-Golang-Batch-28/api/models"
 
 type IProductCategoryMysql interface {
-	GetProductCategoryById(id string) (*models.ProductCategory, error)
+	GetProductCategoryById(id *int) (*models.ProductCategory, error)
 	GetProductCategoryByName(name string) (*models.ProductCategory, error)
 	GetAllProductCategory(orderby string) ([]*models.ProductCategory, error)
 	CreateProductCategory(form *models.FormName) error

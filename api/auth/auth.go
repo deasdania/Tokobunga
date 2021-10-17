@@ -6,6 +6,8 @@ import (
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/api/models"
 	"Final-Project-BDS-Sanbercode-Golang-Batch-28/utilities"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"     // swagger embed files
+	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
 	"net/http"
 )
 
@@ -20,6 +22,8 @@ func (a Auth) Account(r *gin.RouterGroup) {
 	r.POST(utilities.LOGOUT, a.Logout)                       // private
 	r.POST(utilities.REFRESH, a.Refresh)                     // public
 	r.POST(utilities.CREATE_ACCOUNT_PUBLIC, a.CreateAccount) // public
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
 
 func (a Auth) CheckAuth(context *gin.Context) {
@@ -50,6 +54,15 @@ func (a Auth) CreateAccount(c *gin.Context) {
 	response := a.AccountUsecase.CreateUser(form_register, utilities.MEMBER)
 	c.JSON(response.Status, response)
 }
+
+// LoginUser godoc
+// @Summary Login as as user.
+// @Description Logging in to get jwt token to access admin or user api by roles.
+// @Tags Auth
+// @Param Body body LoginInput true "the body to login a user"
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router /login [post]
 func (a Auth) Login(context *gin.Context) {
 	email := context.PostForm("email")
 	password := context.PostForm("password")

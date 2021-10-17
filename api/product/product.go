@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"strconv"
+	// "strconv"
 )
 
 type Product struct {
@@ -20,11 +20,12 @@ type Product struct {
 
 func (a Product) Product(r *gin.RouterGroup) {
 	r.POST(utilities.CREATE_PRODUCT, a.CreateProduct)
-	r.PUT(utilities.UPDATE_PRODUCT, a.UpdateProduct)
+	// r.PUT(utilities.UPDATE_PRODUCT, a.UpdateProduct)
 
 	r.POST(utilities.CREATE_PRODUCT_CATEGORY, a.CreateProductCategory)
-	r.PUT(utilities.UPDATE_PRODUCT_CATEGORY, a.UpdateProductCategory)
+	// r.PUT(utilities.UPDATE_PRODUCT_CATEGORY, a.UpdateProductCategory)
 
+	// r.POST(utilities.CREATE_PRODUCT_DETAIL, a.CreateProductDetail)
 }
 
 func (a Product) CreateProduct(c *gin.Context) {
@@ -38,59 +39,59 @@ func (a Product) CreateProduct(c *gin.Context) {
 	fmt.Println(metadata)
 	isAdmin := a.AccountUsecase.CheckUserIsAdmin(metadata.Email)
 	if isAdmin {
-		name := c.PostForm("name")
-		category_id := c.PostForm("category_id")
-		tint, _ := strconv.Atoi(category_id)
-
-		form_product := models.Product{
-			Name:       name,
-			CategoryId: tint,
-		}
-		response := a.ProductUsecase.CreateProduct(form_product)
-		c.JSON(response.Status, response)
-		return
-	}
-	c.JSON(http.StatusBadRequest, gin.H{
-		"message": "you are not allowed",
-	})
-
-}
-
-func (a Product) UpdateProduct(c *gin.Context) {
-	metadata, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
-	if errA != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": errA.Error(),
-		})
-		return
-	}
-	fmt.Println(metadata)
-	isAdmin := a.AccountUsecase.CheckUserIsAdmin(metadata.Email)
-	if isAdmin {
-		id := c.PostForm("product_id")
-		name := c.PostForm("name")
-		category_id := c.PostForm("category_id")
-
-		if id == "" || name == "" || category_id == "" {
+		var productReq models.ProductReq
+		err := c.ShouldBindJSON(&productReq)
+		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"message": "product_id, name, and category_id cannot be Empty",
+				"error": err.Error(),
 			})
 			return
 		}
-
-		tint, _ := strconv.Atoi(category_id)
-		tid, _ := strconv.Atoi(id)
-
-		form_product := models.Product{
-			Id:         tid,
-			Name:       name,
-			CategoryId: tint,
-		}
-		response := a.ProductUsecase.UpdateProduct(form_product)
+		response := a.ProductUsecase.CreateProduct(&productReq)
 		c.JSON(response.Status, response)
 		return
 	}
 	c.JSON(http.StatusBadRequest, gin.H{
 		"message": "you are not allowed",
 	})
+
 }
+
+// func (a Product) UpdateProduct(c *gin.Context) {
+// 	metadata, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
+// 	if errA != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{
+// 			"message": errA.Error(),
+// 		})
+// 		return
+// 	}
+// 	fmt.Println(metadata)
+// 	isAdmin := a.AccountUsecase.CheckUserIsAdmin(metadata.Email)
+// 	if isAdmin {
+// 		id := c.PostForm("product_id")
+// 		name := c.PostForm("name")
+// 		category_id := c.PostForm("category_id")
+
+// 		if id == "" || name == "" || category_id == "" {
+// 			c.JSON(http.StatusBadRequest, gin.H{
+// 				"message": "product_id, name, and category_id cannot be Empty",
+// 			})
+// 			return
+// 		}
+
+// 		tint, _ := strconv.Atoi(category_id)
+// 		tid, _ := strconv.Atoi(id)
+
+// 		form_product := models.Product{
+// 			Id:         tid,
+// 			Name:       name,
+// 			CategoryId: tint,
+// 		}
+// 		response := a.ProductUsecase.UpdateProduct(form_product)
+// 		c.JSON(response.Status, response)
+// 		return
+// 	}
+// 	c.JSON(http.StatusBadRequest, gin.H{
+// 		"message": "you are not allowed",
+// 	})
+// }

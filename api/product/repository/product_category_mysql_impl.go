@@ -11,7 +11,7 @@ type productCategoryMysql struct {
 	db *gorm.DB
 }
 
-func (a productCategoryMysql) GetProductCategoryById(id string) (*models.ProductCategory, error) {
+func (a productCategoryMysql) GetProductCategoryById(id *int) (*models.ProductCategory, error) {
 	var category models.ProductCategory
 	err := a.db.Debug().Model(&models.ProductCategory{}).First(&category, "id = ?", id)
 	if err.Error != nil {

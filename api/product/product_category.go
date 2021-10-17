@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"strconv"
+	// "strconv"
 )
 
 func (a Product) CreateProductCategory(c *gin.Context) {
@@ -39,38 +39,38 @@ func (a Product) CreateProductCategory(c *gin.Context) {
 
 }
 
-func (a Product) UpdateProductCategory(c *gin.Context) {
-	metadata, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
-	if errA != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": errA.Error(),
-		})
-		return
-	}
-	fmt.Println(metadata)
-	isAdmin := a.AccountUsecase.CheckUserIsAdmin(metadata.Email)
-	if isAdmin {
-		name := c.PostForm("name")
-		category_id := c.PostForm("category_id")
+// func (a Product) UpdateProductCategory(c *gin.Context) {
+// 	metadata, errA := a.AuthUsecase.ExtractTokenMetadata(c.Request)
+// 	if errA != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{
+// 			"message": errA.Error(),
+// 		})
+// 		return
+// 	}
+// 	fmt.Println(metadata)
+// 	isAdmin := a.AccountUsecase.CheckUserIsAdmin(metadata.Email)
+// 	if isAdmin {
+// 		name := c.PostForm("name")
+// 		category_id := c.PostForm("category_id")
 
-		if name == "" || category_id == "" {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"message": "name and category_id cannot be Empty",
-			})
-			return
-		}
+// 		if name == "" || category_id == "" {
+// 			c.JSON(http.StatusBadRequest, gin.H{
+// 				"message": "name and category_id cannot be Empty",
+// 			})
+// 			return
+// 		}
 
-		tint, _ := strconv.Atoi(category_id)
+// 		tint, _ := strconv.Atoi(category_id)
 
-		form_product := models.ProductCategory{
-			Name: name,
-			Id:   tint,
-		}
-		response := a.ProductUsecase.UpdateProductCategory(form_product)
-		c.JSON(response.Status, response)
-		return
-	}
-	c.JSON(http.StatusBadRequest, gin.H{
-		"message": "you are not allowed",
-	})
-}
+// 		form_product := models.ProductCategory{
+// 			Name: name,
+// 			Id:   tint,
+// 		}
+// 		response := a.ProductUsecase.UpdateProductCategory(form_product)
+// 		c.JSON(response.Status, response)
+// 		return
+// 	}
+// 	c.JSON(http.StatusBadRequest, gin.H{
+// 		"message": "you are not allowed",
+// 	})
+// }
