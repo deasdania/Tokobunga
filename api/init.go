@@ -65,5 +65,6 @@ func Init(r *gin.Engine) {
 
 	fmt.Println(utilities.ACCOUNT_PORT)
 	// r.Run(fmt.Sprintf(":8089"))
-	r.Run(os.Getenv("HOST"))
+	// r.Run(os.Getenv("HOST"))
+	r.Run()
 }
