@@ -74,7 +74,7 @@ func (a Public) GetProductReview(c *gin.Context) {
 // @Param Body formData LoginInput true "the body to login user"
 // @Produce json
 // @Success 200 {object} map[string]interface{}
-// @Router /login [post]
+// @Router /api/login [post]
 func (a Public) Login(c *gin.Context) {
 	email := c.PostForm("email")
 	password := c.PostForm("password")

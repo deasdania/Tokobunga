@@ -73,7 +73,7 @@ func Init(r *gin.Engine) {
 	ra.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	fmt.Println(utilities.ACCOUNT_PORT)
-	// r.Run(fmt.Sprintf(":8089"))
+	r.Run(fmt.Sprintf("localhost:8089"))
 	// r.Run(os.Getenv("HOST"))
 	r.Run()
 }

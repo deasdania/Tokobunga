@@ -371,6 +371,41 @@ var doc = `{
                 }
             }
         },
+        "/api/login": {
+            "post": {
+                "description": "Logging in to get jwt token to access admin or user api by roles",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Public"
+                ],
+                "summary": "Login user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
         "/api/product": {
             "get": {
                 "description": "Get a list of Product",
@@ -518,38 +553,6 @@ var doc = `{
                     }
                 }
             }
-        },
-        "/login": {
-            "post": {
-                "description": "Logging in to get jwt token to access admin or user api by roles",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Public"
-                ],
-                "summary": "Login user",
-                "parameters": [
-                    {
-                        "description": "the body to login user",
-                        "name": "Body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/public.LoginInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -576,21 +579,6 @@ var doc = `{
                     "items": {
                         "type": "string"
                     }
-                }
-            }
-        },
-        "public.LoginInput": {
-            "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
                 }
             }
         }
