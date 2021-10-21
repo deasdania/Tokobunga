@@ -71,7 +71,7 @@ func (a Public) GetProductReview(c *gin.Context) {
 // @Summary Login user
 // @Description Logging in to get jwt token to access admin or user api by roles
 // @Tags Public
-// @Param Body body LoginInput true "the body to login user"
+// @Param Body formData LoginInput true "the body to login user"
 // @Produce json
 // @Success 200 {object} map[string]interface{}
 // @Router /login [post]
